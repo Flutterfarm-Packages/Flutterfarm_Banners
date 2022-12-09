@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class ImageBannersSliderWithControllers extends StatefulWidget {
@@ -30,7 +31,7 @@ class _ImageBannersSliderWithControllersState
 
   Timer getTimer() {
     return Timer.periodic(const Duration(seconds: 3), (timer) {
-      if (pageNo == 4) {
+      if (pageNo == widget.imageBanners) {
         pageNo = 0;
       }
       pageController.animateToPage(
@@ -67,8 +68,10 @@ class _ImageBannersSliderWithControllersState
           child: PageView(
             controller: pageController,
             onPageChanged: (index) {
+              setState(() {
               pageNo = index;
-              setState(() {});
+
+              });
               print(pageNo);
             },
             children: [
@@ -93,14 +96,11 @@ class _ImageBannersSliderWithControllersState
                     padding: const EdgeInsets.only(left: 8.0),
                     child: InkWell(
                       onTap: () {
-                        setState(() {
-                          if (pageNo == 0) {
-                            pageNo = widget.imageBanners.length;
-                          }
-                          pageController.animateToPage(pageNo,
-                              duration: Duration(milliseconds: 0500),
-                              curve: Curves.easeInCirc);
-                          pageNo--;
+
+                          setState(() {
+                            if(pageNo >= 0){
+                              pageController.previousPage(duration: Duration(milliseconds: 1000), curve: Curves.easeInCirc);
+                               }
                         });
                       },
                       child: Card(
@@ -116,21 +116,20 @@ class _ImageBannersSliderWithControllersState
             widget.activeDots
                 ? Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      widget.imageBanners.length,
-                      (index) => GestureDetector(
-                        child: Container(
+                    children: [
+
+                      for(int i=0;i<widget.imageBanners.length;i++)
+                         Container(
                           margin: const EdgeInsets.all(2.0),
                           child: Icon(
                             Icons.circle,
                             size: 12.0,
-                            color: pageNo == index
+                            color: pageNo == i
                                 ? Colors.indigoAccent
                                 : Colors.grey.shade300,
                           ),
                         ),
-                      ),
-                    ),
+                    ]
                   )
                 : SizedBox(),
             widget.showArrowControllers
@@ -139,13 +138,13 @@ class _ImageBannersSliderWithControllersState
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          if (pageNo == widget.imageBanners.length) {
-                            pageNo = 0;
-                          }
-                          pageController.animateToPage(pageNo,
-                              duration: Duration(seconds: 0500),
-                              curve: Curves.easeInCirc);
-                          pageNo++;
+                          if (pageNo <= widget.imageBanners.length) {
+
+
+                          pageController.nextPage(duration: Duration(milliseconds: 1000), curve: Curves.easeInCirc);
+
+    }
+
                         });
                       },
                       child: Card(
